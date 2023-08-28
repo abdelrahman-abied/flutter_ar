@@ -240,9 +240,11 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
       anchors = newAnchor;
       bool? didAddAnchor = await arAnchorManager!.addAnchor(newAnchor);
       var newNode = ARNode(
-          type: NodeType.webGLB,
-          uri:
-              "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+          // type: NodeType.webGLB,
+          // uri:
+          //     "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+          type: NodeType.localGLTF2,
+          uri: "assets/tanks.gltf",
           scale: Vector3(sliderValue, sliderValue, sliderValue),
           position: Vector3(0.0, 0.0, 0.0),
           rotation: Vector4(1.0, 0.0, 0.0, 0.0));
@@ -262,9 +264,11 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
         // anchors.add(newAnchor);
         // Add note to anchor
         var newNode = ARNode(
-            type: NodeType.webGLB,
-            uri:
-                "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+            // type: NodeType.webGLB,
+            // uri:
+            //     "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+            type: NodeType.localGLTF2,
+            uri: "assets/tanks.gltf",
             scale: Vector3(sliderValue, sliderValue, sliderValue),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
