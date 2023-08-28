@@ -242,7 +242,7 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
       var newNode = ARNode(
           type: NodeType.webGLB,
           uri:
-              "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/images/gas_tank.glb",
+              "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
           scale: Vector3(sliderValue, sliderValue, sliderValue),
           position: Vector3(0.0, 0.0, 0.0),
           rotation: Vector4(1.0, 0.0, 0.0, 0.0));
@@ -264,7 +264,7 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
         var newNode = ARNode(
             type: NodeType.webGLB,
             uri:
-                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/images/gas_tank.glb",
+                "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
             scale: Vector3(sliderValue, sliderValue, sliderValue),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
