@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/home.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+import 'home.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Permission.camera.request();
   runApp(const MyApp());
 }
 

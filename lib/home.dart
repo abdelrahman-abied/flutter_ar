@@ -124,9 +124,10 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
   ARAnchorManager? arAnchorManager;
+  double sliderValue = 1.0;
 
-  List<ARNode> nodes = [];
-  List<ARAnchor> anchors = [];
+  ARNode? nodes;
+  ARAnchor? anchors;
 
   @override
   void dispose() {
@@ -137,15 +138,29 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Object Transformation Gestures'),
-        ),
-        body: Container(
-            child: Stack(children: [
+      appBar: AppBar(
+        title: const Text('Object Transformation Gestures'),
+      ),
+      body: Container(
+        child: Stack(children: [
           ARView(
             onARViewCreated: onARViewCreated,
             planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
           ),
+          // Container(
+          //   height: 300,
+          //   width: 300,
+          //   child: const ModelViewer(
+          //     // backgroundColors: Color.fromARGB(0xFF, 0xEE, 0xEE, 0xEE),
+          //     src: 'assets/images/gas_tank.glb',
+          //     alt: 'A 3D model of an astronaut',
+          //     ar: true,
+          //     arModes: ['scene-viewer', 'webxr', 'quick-look'],
+          //     autoRotate: false,
+          //     iosSrc: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz',
+          //     disableZoom: false,
+          //   ),
+          // ),
           Align(
             alignment: FractionalOffset.bottomCenter,
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -154,8 +169,29 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
                 child: const Text("Remove Everything"),
               ),
             ]),
-          )
-        ])));
+          ),
+          Positioned(
+            bottom: 100,
+            left: 10,
+            right: 10,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Slider(
+                  value: sliderValue,
+                  onChanged: (v) {
+                    setState(() {
+                      sliderValue = v;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        ]),
+      ),
+    );
   }
 
   void onARViewCreated(ARSessionManager arSessionManager, ARObjectManager arObjectManager,
@@ -165,7 +201,7 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
     this.arAnchorManager = arAnchorManager;
 
     this.arSessionManager!.onInitialize(
-          showFeaturePoints: false,
+          showFeaturePoints: true,
           showPlanes: true,
           customPlaneTexturePath: "Images/triangle.png",
           showWorldOrigin: true,
@@ -187,10 +223,33 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
     /*nodes.forEach((node) {
       this.arObjectManager.removeNode(node);
     });*/
-    for (var anchor in anchors) {
-      arAnchorManager!.removeAnchor(anchor);
+    if (anchors != null) {
+      arAnchorManager!.removeAnchor(anchors!);
     }
-    anchors = [];
+    anchors = null;
+  }
+
+  Future<void> onLocalObjectAtOriginButtonPressed(List<ARHitTestResult> hitTestResults) async {
+    if (nodes != null) {
+      arObjectManager!.removeNode(nodes!);
+      nodes = null;
+    } else {
+      var singleHitTestResult = hitTestResults
+          .firstWhere((hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
+      var newAnchor = ARPlaneAnchor(transformation: singleHitTestResult.worldTransform);
+      anchors = newAnchor;
+      bool? didAddAnchor = await arAnchorManager!.addAnchor(newAnchor);
+      var newNode = ARNode(
+          type: NodeType.webGLB,
+          uri:
+              "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/images/gas_tank.glb",
+          scale: Vector3(sliderValue, sliderValue, sliderValue),
+          position: Vector3(0.0, 0.0, 0.0),
+          rotation: Vector4(1.0, 0.0, 0.0, 0.0));
+      bool? didAddLocalNode = await arObjectManager!.addNode(newNode);
+      nodes = (didAddLocalNode!) ? newNode : null;
+      bool? didAddNodeToAnchor = await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
+    }
   }
 
   Future<void> onPlaneOrPointTapped(List<ARHitTestResult> hitTestResults) async {
@@ -200,18 +259,18 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
       var newAnchor = ARPlaneAnchor(transformation: singleHitTestResult.worldTransform);
       bool? didAddAnchor = await arAnchorManager!.addAnchor(newAnchor);
       if (didAddAnchor!) {
-        anchors.add(newAnchor);
+        // anchors.add(newAnchor);
         // Add note to anchor
         var newNode = ARNode(
             type: NodeType.webGLB,
             uri:
-                "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-            scale: Vector3(0.2, 0.2, 0.2),
+                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/images/gas_tank.glb",
+            scale: Vector3(sliderValue, sliderValue, sliderValue),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
         bool? didAddNodeToAnchor = await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
         if (didAddNodeToAnchor!) {
-          nodes.add(newNode);
+          // nodes.add(newNode);
         } else {
           arSessionManager!.onError("Adding Node to Anchor failed");
         }
@@ -231,7 +290,7 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
 
   onPanEnded(String nodeName, Matrix4 newTransform) {
     print("Ended panning node " + nodeName);
-    final pannedNode = nodes.firstWhere((element) => element.name == nodeName);
+    // final pannedNode = nodes.firstWhere((element) => element.name == nodeName);
 
     /*
     * Uncomment the following command if you want to keep the transformations of the Flutter representations of the nodes up to date
@@ -250,7 +309,7 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
 
   onRotationEnded(String nodeName, Matrix4 newTransform) {
     print("Ended rotating node " + nodeName);
-    final rotatedNode = nodes.firstWhere((element) => element.name == nodeName);
+    // final rotatedNode = nodes.firstWhere((element) => element.name == nodeName);
 
     /*
     * Uncomment the following command if you want to keep the transformations of the Flutter representations of the nodes up to date
