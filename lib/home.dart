@@ -145,7 +145,7 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
         child: Stack(children: [
           ARView(
             onARViewCreated: onARViewCreated,
-            planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
+            planeDetectionConfig: PlaneDetectionConfig.horizontal,
           ),
           // Container(
           //   height: 300,
@@ -170,25 +170,25 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
               ),
             ]),
           ),
-          Positioned(
-            bottom: 100,
-            left: 10,
-            right: 10,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Slider(
-                  value: sliderValue,
-                  onChanged: (v) {
-                    setState(() {
-                      sliderValue = v;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
+          // Positioned(
+          //   bottom: 100,
+          //   left: 10,
+          //   right: 10,
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     mainAxisSize: MainAxisSize.max,
+          //     children: <Widget>[
+          //       Slider(
+          //         value: sliderValue,
+          //         onChanged: (v) {
+          //           setState(() {
+          //             sliderValue = v;
+          //           });
+          //         },
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ]),
       ),
     );
@@ -240,11 +240,11 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
       anchors = newAnchor;
       bool? didAddAnchor = await arAnchorManager!.addAnchor(newAnchor);
       var newNode = ARNode(
-          // type: NodeType.webGLB,
-          // uri:
-          //     "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-          type: NodeType.localGLTF2,
-          uri: "assets/tanks.gltf",
+          type: NodeType.webGLB,
+          uri:
+              "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tanks.glb?raw=true",
+          // type: NodeType.localGLTF2,
+          // uri: "assets/tanks.gltf",
           scale: Vector3(sliderValue, sliderValue, sliderValue),
           position: Vector3(0.0, 0.0, 0.0),
           rotation: Vector4(1.0, 0.0, 0.0, 0.0));
@@ -264,11 +264,11 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
         // anchors.add(newAnchor);
         // Add note to anchor
         var newNode = ARNode(
-            // type: NodeType.webGLB,
-            // uri:
-            //     "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-            type: NodeType.localGLTF2,
-            uri: "assets/tanks.gltf",
+            type: NodeType.webGLB,
+            uri:
+                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tanks.glb?raw=true",
+            // type: NodeType.localGLTF2,
+            // uri: "assets/tanks.gltf",
             scale: Vector3(sliderValue, sliderValue, sliderValue),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
