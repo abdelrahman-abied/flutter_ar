@@ -43,6 +43,7 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
           ARView(
             onARViewCreated: onARViewCreated,
             planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
+            // showPlatformType: true,
           ),
           Align(
             alignment: FractionalOffset.bottomCenter,
@@ -90,7 +91,7 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
     for (var anchor in anchors) {
       arAnchorManager!.removeAnchor(anchor);
     }
-    ;
+
     anchors = [];
   }
 
