@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ar/screen_shot.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +21,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: ScreenshotWidget(),
+      // home: SnapshotScenePage(),
     );
   }
 }

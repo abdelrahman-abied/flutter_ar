@@ -42,7 +42,7 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
             child: Stack(children: [
           ARView(
             onARViewCreated: onARViewCreated,
-            planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
+            planeDetectionConfig: PlaneDetectionConfig.horizontal,
             // showPlatformType: true,
           ),
           Align(
@@ -128,8 +128,10 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
         var newNode = ARNode(
             type: NodeType.webGLB,
             uri:
-                "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-            scale: Vector3(0.2, 0.2, 0.2),
+                // "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_2000.glb?raw=true",
+            // scale: Vector3(0.2, 0.2, 0.2),
+            scale: Vector3(50, 50, 50),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
         bool? didAddNodeToAnchor = await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
