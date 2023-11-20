@@ -129,7 +129,7 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
             type: NodeType.webGLB,
             uri:
                 // "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_2000.glb?raw=true",
+                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l.glb?raw=true",
             // scale: Vector3(0.2, 0.2, 0.2),
             scale: Vector3(50, 50, 50),
             position: Vector3(0.0, 0.0, 0.0),
