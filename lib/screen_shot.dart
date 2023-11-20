@@ -128,9 +128,14 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
         var newNode = ARNode(
             type: NodeType.webGLB,
             uri:
-                // "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l.glb?raw=true",
+            //     "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
             // scale: Vector3(0.2, 0.2, 0.2),
+            // worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/simple_propane_tank.glb?raw=true",
+            // worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_shell_1000l.glb?raw=true",
+            // not worked
+            "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l.glb?raw=true",
             scale: Vector3(50, 50, 50),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
@@ -143,7 +148,7 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
         }
       }
     } else {
-      arSessionManager!.onError("Adding Anchor failed");
+      arSessionManager?.onError("Adding Anchor failed");
     }
   }
 
