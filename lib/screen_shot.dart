@@ -132,10 +132,12 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                 // scale: Vector3(0.2, 0.2, 0.2),
                 // worked
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/simple_propane_tank.glb?raw=true",
-                // worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_shell_1000l.glb?raw=true",
-                // not worked
-                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l.glb?raw=true",
+            // worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_shell_1000l.glb?raw=true",
+            // not worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l.glb?raw=true",
+            // not worked
+            "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l_1?raw=true",
             scale: Vector3(50, 50, 50),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
