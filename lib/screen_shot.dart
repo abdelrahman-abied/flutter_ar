@@ -130,14 +130,16 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
             uri:
                 //     "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
                 // scale: Vector3(0.2, 0.2, 0.2),
-                // worked
+                //  real worked worked
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/simple_propane_tank.glb?raw=true",
-            // worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_shell_1000l.glb?raw=true",
+                // worked
+                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_shell_1000l.glb?raw=true",
+                 // real worked worked
+            "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l.glb?raw=true",
             // not worked
             // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l.glb?raw=true",
             // not worked
-            "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l_1?raw=true",
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l_1.glb?raw=true",
             scale: Vector3(50, 50, 50),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
