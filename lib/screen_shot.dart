@@ -153,7 +153,7 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
 
                 /// worked
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_2000.glb?raw=true",
-                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450.glb?raw=true",
+                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450_L.glb?raw=true",
             scale: Platform.isIOS ? Vector3(50, 50, 50) : Vector3(1, 1, 1),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
