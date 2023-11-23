@@ -141,11 +141,11 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                 // not worked
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l.glb?raw=true",
                 // not worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l_1.glb?raw=true",
+                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l_1.glb?raw=true",
                 // not worked
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450_L.glb?raw=true",
             // real worked
-            "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l_Husam.glb?raw=true",
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l_Husam.glb?raw=true",
             // real worked worked
             // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/abdelrahman.glb?raw=true",
             // real worked worked
