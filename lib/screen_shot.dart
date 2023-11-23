@@ -145,15 +145,15 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                 // not worked
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450_L.glb?raw=true",
                 // real worked
-                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l_Husam.glb?raw=true",
-            // real worked worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/abdelrahman.glb?raw=true",
-            // real worked worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000lb.glb?raw=true",
+                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l_Husam.glb?raw=true",
+                // real worked worked
+                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/abdelrahman.glb?raw=true",
+                // real worked worked
+                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000lb.glb?raw=true",
 
-
-            /// worked
-            /// 
+                /// worked
+                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_2000.glb?raw=true",
+                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450.glb?raw=true",
             scale: Platform.isIOS ? Vector3(50, 50, 50) : Vector3(1, 1, 1),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
