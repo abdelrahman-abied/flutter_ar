@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
 import 'package:ar_flutter_plugin/datatypes/hittest_result_types.dart';
@@ -134,13 +136,16 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/simple_propane_tank.glb?raw=true",
                 // worked
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_shell_1000l.glb?raw=true",
-                 // real worked worked
-            "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l.glb?raw=true",
-            // not worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l.glb?raw=true",
-            // not worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l_1.glb?raw=true",
-            scale: Vector3(50, 50, 50),
+                // real worked worked
+                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l.glb?raw=true",
+                // not worked
+                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l.glb?raw=true",
+                // not worked
+                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l_1.glb?raw=true",
+                // not worked
+                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450_L.glb?raw=true",
+                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l_Husam.glb.glb?raw=true",
+            scale: Platform.isIOS ? Vector3(50, 50, 50) : Vector3(1, 1, 1),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
         bool? didAddNodeToAnchor = await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
