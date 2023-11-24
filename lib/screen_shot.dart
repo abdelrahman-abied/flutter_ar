@@ -12,7 +12,7 @@ import 'package:ar_flutter_plugin/models/ar_anchor.dart';
 import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math_64.dart';
+import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 class ScreenshotWidget extends StatefulWidget {
   const ScreenshotWidget({Key? key}) : super(key: key);
@@ -50,8 +50,28 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
           Align(
             alignment: FractionalOffset.bottomCenter,
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-              ElevatedButton(onPressed: onRemoveEverything, child: const Text("Remove Everything")),
-              ElevatedButton(onPressed: onTakeScreenshot, child: const Text("Take Screenshot")),
+              Expanded(
+                  child: ElevatedButton(
+                      onPressed: onRemoveEverything, child: const Text("Remove Everything"))),
+              Expanded(
+                  child: ElevatedButton(
+                      onPressed: onTakeScreenshot, child: const Text("Take Screenshot"))),
+              Expanded(
+                child: IconButton(
+                    color: Colors.white,
+                    onPressed: () {
+                      nodes.first.transform = Matrix4.identity()..scale(nodes.first.scale * 2);
+                    },
+                    icon: const Icon(Icons.add)),
+              ),
+              Expanded(
+                child: IconButton(
+                    color: Colors.white,
+                    onPressed: () {
+                      nodes.first.transform = Matrix4.identity()..scale(nodes.first.scale * .5);
+                    },
+                    icon: const Icon(Icons.minimize)),
+              )
             ]),
           )
         ])));
@@ -130,7 +150,7 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
         var newNode = ARNode(
             type: NodeType.webGLB,
             uri:
-                //     "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+                // "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
                 // scale: Vector3(0.2, 0.2, 0.2),
                 //  real worked worked
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/simple_propane_tank.glb?raw=true",
@@ -155,10 +175,11 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_1000.glb?raw=true",
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_2000.glb?raw=true",
                 // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_4000.glb?raw=true",
-                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450L.glb?raw=true",
+                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_450L.glb?raw=true",
             scale: Platform.isIOS ? Vector3(50, 50, 50) : Vector3(1, 1, 1),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
+
         bool? didAddNodeToAnchor = await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
 
         if (didAddNodeToAnchor != null && didAddNodeToAnchor) {
