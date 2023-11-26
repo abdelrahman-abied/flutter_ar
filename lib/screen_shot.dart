@@ -87,7 +87,7 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
       url:
           "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_7000L.glb?raw=true",
       androidUrl:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_7000L.glb?raw=true",
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_7000L.glb?raw=true",
     ),
   ];
   int selectedImage = 1;
