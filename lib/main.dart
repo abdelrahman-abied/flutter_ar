@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/screen_shot.dart';
+import 'package:flutter_ar/zoom.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ScreenshotWidget(),
+      home: Zoom(),
       // home: SnapshotScenePage(),
     );
   }

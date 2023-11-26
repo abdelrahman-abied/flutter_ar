@@ -42,11 +42,22 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
         ),
         body: Container(
             child: Stack(children: [
-          ARView(
-            onARViewCreated: onARViewCreated,
-            planeDetectionConfig: PlaneDetectionConfig.horizontal,
-            // showPlatformType: true,
+          GestureDetector(
+            // onScaleUpdate: (details) {
+            //   nodes.first.transform = Matrix4.identity()..scale(details.scale);
+            // },
+            child: ARView(
+              onARViewCreated: onARViewCreated,
+              planeDetectionConfig: PlaneDetectionConfig.horizontal,
+              // showPlatformType: true,
+            ),
           ),
+          // Align(
+          //   alignment: Alignment.center,
+          //   child: Text(
+          //     nodes.first.scale.toString(),
+          //   ),
+          // ),
           Align(
             alignment: FractionalOffset.bottomCenter,
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -60,7 +71,10 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                 child: IconButton(
                     color: Colors.white,
                     onPressed: () {
-                      nodes.first.transform = Matrix4.identity()..scale(nodes.first.scale * 2);
+                      debugPrint("scale: ${nodes.first.scale}");
+                      debugPrint("scale: ${nodes.length}");
+
+                      nodes.last.transform = Matrix4.identity()..scale(nodes.last.scale * 2);
                     },
                     icon: const Icon(Icons.add)),
               ),
@@ -68,7 +82,9 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                 child: IconButton(
                     color: Colors.white,
                     onPressed: () {
-                      nodes.first.transform = Matrix4.identity()..scale(nodes.first.scale * .5);
+                      debugPrint("scale: ${nodes.first.scale}");
+                      debugPrint("scale: ${nodes.length}");
+                      nodes.first.transform = Matrix4.identity()..scale(nodes.last.scale * .5);
                     },
                     icon: const Icon(Icons.minimize)),
               )
@@ -106,14 +122,15 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
   }
 
   Future<void> onRemoveEverything() async {
-    /*nodes.forEach((node) {
-      this.arObjectManager.removeNode(node);
-    });*/
+    nodes.forEach((node) {
+      arObjectManager?.removeNode(node);
+    });
     // anchors.forEach((anchor)
     for (var anchor in anchors) {
       arAnchorManager!.removeAnchor(anchor);
     }
-
+    nodes.clear();
+    nodes = [];
     anchors = [];
   }
 
