@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/ar_flutter/ar_ios.dart';
 import 'package:flutter_ar/screen_shot.dart';
-import 'package:flutter_ar/zoom.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +20,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Zoom(),
-      // home: SnapshotScenePage(),
+      // home: Zoom(),
+      home: ScreenshotWidget(),
     );
   }
 }

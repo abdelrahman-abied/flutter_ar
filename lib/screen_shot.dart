@@ -11,6 +11,7 @@ import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
 import 'package:ar_flutter_plugin/models/ar_anchor.dart';
 import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 
@@ -18,6 +19,19 @@ class ScreenshotWidget extends StatefulWidget {
   const ScreenshotWidget({Key? key}) : super(key: key);
   @override
   _ScreenshotWidgetState createState() => _ScreenshotWidgetState();
+}
+
+class ArObjectModel {
+  final String name;
+  final String path;
+  final String url;
+  final String androidUrl;
+  ArObjectModel({
+    required this.name,
+    required this.path,
+    required this.url,
+    required this.androidUrl,
+  });
 }
 
 class _ScreenshotWidgetState extends State<ScreenshotWidget> {
@@ -34,6 +48,49 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
     arSessionManager!.dispose();
   }
 
+  List<ArObjectModel> arObjects = [
+    ArObjectModel(
+      name: "450l",
+      path: "assets/pictures/images/ver_tank.png",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450L.glb?raw=true§",
+      androidUrl:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_450L.glb?raw=true§",
+    ),
+    ArObjectModel(
+      name: "1000L",
+      path: "assets/pictures/images/hor_tank.png",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000L.glb?raw=true",
+      androidUrl:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_1000L.glb?raw=true",
+    ),
+    ArObjectModel(
+      name: "2000L",
+      path: "assets/pictures/images/hor_tank.png",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_2000L.glb?raw=true",
+      androidUrl:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_2000L.glb?raw=true",
+    ),
+    ArObjectModel(
+      name: "4000L",
+      path: "assets/pictures/images/hor_tank.png",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000L.glb?raw=true",
+      androidUrl:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_4000L.glb?raw=true",
+    ),
+    ArObjectModel(
+      name: "7000L",
+      path: "assets/pictures/images/hor_tank.png",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_7000L.glb?raw=true",
+      androidUrl:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_7000L.glb?raw=true",
+    ),
+  ];
+  int selectedImage = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,35 +117,84 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
           // ),
           Align(
             alignment: FractionalOffset.bottomCenter,
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-              Expanded(
-                  child: ElevatedButton(
-                      onPressed: onRemoveEverything, child: const Text("Remove Everything"))),
-              Expanded(
-                  child: ElevatedButton(
-                      onPressed: onTakeScreenshot, child: const Text("Take Screenshot"))),
-              Expanded(
-                child: IconButton(
-                    color: Colors.white,
-                    onPressed: () {
-                      debugPrint("scale: ${nodes.first.scale}");
-                      debugPrint("scale: ${nodes.length}");
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: arObjects
+                      .map((e) => Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                onRemoveEverything();
+                                selectedImage = arObjects.indexOf(e);
+                                setState(() {});
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: selectedImage == arObjects.indexOf(e)
+                                        ? Colors.grey
+                                        : Colors.transparent,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                        e.path,
+                                        width: 50,
+                                        height: 50,
+                                      ),
+                                      AutoSizeText(
+                                        e.name,
+                                        maxLines: 1,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                ),
+                Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                  Expanded(
+                      child: ElevatedButton(
+                          onPressed: onRemoveEverything, child: const Text("Remove Everything"))),
+                  Expanded(
+                      child: ElevatedButton(
+                          onPressed: onTakeScreenshot, child: const Text("Take Screenshot"))),
+                  Expanded(
+                    child: IconButton(
+                        color: Colors.white,
+                        onPressed: () {
+                          debugPrint("scale: ${nodes.first.scale}");
+                          debugPrint("scale: ${nodes.length}");
 
-                      nodes.last.transform = Matrix4.identity()..scale(nodes.last.scale * 2);
-                    },
-                    icon: const Icon(Icons.add)),
-              ),
-              Expanded(
-                child: IconButton(
-                    color: Colors.white,
-                    onPressed: () {
-                      debugPrint("scale: ${nodes.first.scale}");
-                      debugPrint("scale: ${nodes.length}");
-                      nodes.first.transform = Matrix4.identity()..scale(nodes.last.scale * .5);
-                    },
-                    icon: const Icon(Icons.minimize)),
-              )
-            ]),
+                          nodes.last.transform = Matrix4.identity()..scale(nodes.last.scale * 2);
+                        },
+                        icon: const Icon(Icons.add)),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                        color: Colors.white,
+                        onPressed: () {
+                          debugPrint("scale: ${nodes.first.scale}");
+                          debugPrint("scale: ${nodes.length}");
+                          nodes.first.transform = Matrix4.identity()..scale(nodes.last.scale * .5);
+                        },
+                        icon: const Icon(Icons.minimize)),
+                  )
+                ]),
+              ],
+            ),
           )
         ])));
   }
@@ -166,33 +272,34 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
         // Add note to anchor
         var newNode = ARNode(
             type: NodeType.webGLB,
-            uri:
-                // "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-                // scale: Vector3(0.2, 0.2, 0.2),
-                //  real worked worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/simple_propane_tank.glb?raw=true",
-                // worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_shell_1000l.glb?raw=true",
-                // real worked worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l.glb?raw=true",
-                // not worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l.glb?raw=true",
-                // not worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l_1.glb?raw=true",
-                // not worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450_L.glb?raw=true",
-                // real worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l_Husam.glb?raw=true",
-                // real worked worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/abdelrahman.glb?raw=true",
-                // real worked worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000lb.glb?raw=true",
+            // uri:
+            // "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+            // scale: Vector3(0.2, 0.2, 0.2),
+            //  real worked worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/simple_propane_tank.glb?raw=true",
+            // worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_shell_1000l.glb?raw=true",
+            // real worked worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l.glb?raw=true",
+            // not worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l.glb?raw=true",
+            // not worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l_1.glb?raw=true",
+            // not worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450_L.glb?raw=true",
+            // real worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l_Husam.glb?raw=true",
+            // real worked worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/abdelrahman.glb?raw=true",
+            // real worked worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000lb.glb?raw=true",
 
-                /// worked
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_1000.glb?raw=true",
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_2000.glb?raw=true",
-                // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_4000.glb?raw=true",
-                "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_450L.glb?raw=true",
+            /// worked
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_1000.glb?raw=true",
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_2000.glb?raw=true",
+            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_4000.glb?raw=true",
+            uri:
+                Platform.isIOS ? arObjects[selectedImage].url : arObjects[selectedImage].androidUrl,
             scale: Platform.isIOS ? Vector3(50, 50, 50) : Vector3(1, 1, 1),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
