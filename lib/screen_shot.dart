@@ -91,6 +91,10 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
     ),
   ];
   int selectedImage = 1;
+  double _counter = 0;
+  double _previousScale = 1.0;
+  double _scaleFactor = 1.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,8 +104,23 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
         body: Container(
             child: Stack(children: [
           GestureDetector(
-            // onScaleUpdate: (details) {
-            //   nodes.first.transform = Matrix4.identity()..scale(details.scale);
+            // onScaleStart: (ScaleStartDetails details) {
+            //   _previousScale = _scaleFactor;
+            // },
+            // onScaleUpdate: (ScaleUpdateDetails details) {
+            //   if (details.scale != 1.0) {
+            //     if (details.scale > _previousScale && _counter < 100) {
+            //       _counter += 1; // Increase counter by 10%
+            //       nodes.last.transform = Matrix4.identity()
+            //         ..scale(nodes.last.scale * (_counter / 100));
+            //     } else if (details.scale < _previousScale && _counter > 0) {
+            //       _counter -= 1; // Decrease counter by 10%
+            //       nodes.last.transform = Matrix4.identity()
+            //         ..scale(nodes.last.scale * (_counter / 100));
+            //     }
+            //     _previousScale = details.scale;
+            //     setState(() {});
+            //   }
             // },
             child: ARView(
               onARViewCreated: onARViewCreated,
@@ -177,10 +196,10 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                         onPressed: () {
                           debugPrint("scale: ${nodes.first.scale}");
                           debugPrint("scale: ${nodes.length}");
-
-                          nodes.last.transform = Matrix4.identity()..scale(nodes.last.scale * 2);
+                          // increase scale to 10% of the current scale
+                          nodes.last.transform = Matrix4.identity()..scale(nodes.last.scale * 1.1);
                         },
-                        icon: const Icon(Icons.add)),
+                        icon: const Icon(Icons.zoom_out_map)),
                   ),
                   Expanded(
                     child: IconButton(
@@ -188,9 +207,10 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                         onPressed: () {
                           debugPrint("scale: ${nodes.first.scale}");
                           debugPrint("scale: ${nodes.length}");
-                          nodes.first.transform = Matrix4.identity()..scale(nodes.last.scale * .5);
+                          // decrease scale to 10% of the current scale
+                          nodes.first.transform = Matrix4.identity()..scale(nodes.last.scale * .9);
                         },
-                        icon: const Icon(Icons.minimize)),
+                        icon: const Icon(Icons.zoom_in_map)),
                   )
                 ]),
               ],
