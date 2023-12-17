@@ -51,6 +51,11 @@ dependencies:
   permission_handler: ^11.1.0
   arkit_plugin: ^1.0.7
   auto_size_text: ^3.0.0
+  path_provider: ^2.1.1
+  shared_preferences: ^2.2.2
+  dio: ^5.4.0
+  flutter_archive: ^5.0.0
+  model_viewer_plus: ^1.7.0
 
 dev_dependencies:
   flutter_test:

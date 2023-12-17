@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
@@ -13,6 +14,9 @@ import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ar/download_helper.dart';
+import 'package:flutter_ar/progress/future_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 class ScreenshotWidget extends StatefulWidget {
@@ -26,12 +30,51 @@ class ArObjectModel {
   final String path;
   final String url;
   final String androidUrl;
+  bool isLocal;
+
   ArObjectModel({
     required this.name,
     required this.path,
     required this.url,
     required this.androidUrl,
+    this.isLocal = false,
   });
+
+  factory ArObjectModel.fromJson(Map<String, dynamic> json) {
+    return ArObjectModel(
+      name: json['name'],
+      path: json['path'],
+      url: json['url'],
+      androidUrl: json['android_url'],
+      isLocal: json['is_local'] ?? false, // Use "?? false" to set default value
+    );
+  }
+// to convert json to map
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'path': path,
+      'url': url,
+      'android_url': androidUrl,
+      'is_local': isLocal,
+    };
+  }
+
+  ArObjectModel copyWith({
+    String? name,
+    String? path,
+    String? url,
+    String? androidUrl,
+    bool? isLocal,
+  }) {
+    return ArObjectModel(
+      name: name ?? this.name,
+      path: path ?? this.path,
+      url: url ?? this.url,
+      androidUrl: androidUrl ?? this.androidUrl,
+      isLocal: isLocal ?? this.isLocal,
+    );
+  }
 }
 
 class _ScreenshotWidgetState extends State<ScreenshotWidget> {
@@ -51,83 +94,102 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
   List<ArObjectModel> arObjects = [
     ArObjectModel(
       name: "450l",
-      path: "assets/pictures/images/ver_tank.png",
-      url:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450L.glb?raw=true§",
+      path: "assets/images/tank_450.png",
+      url: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450L.glb",
       androidUrl:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_450L.glb?raw=true§",
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_450L.glb",
     ),
     ArObjectModel(
       name: "1000L",
-      path: "assets/pictures/images/hor_tank.png",
-      url:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000L.glb?raw=true",
+      path: "assets/images/tank_1000.png",
+      url: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000L.glb",
       androidUrl:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_1000L.glb?raw=true",
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_1000L.glb",
     ),
     ArObjectModel(
       name: "2000L",
-      path: "assets/pictures/images/hor_tank.png",
-      url:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_2000L.glb?raw=true",
+      path: "assets/images/tank_1000.png",
+      url: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_2000L.glb",
       androidUrl:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_2000L.glb?raw=true",
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_2000L.glb",
     ),
     ArObjectModel(
       name: "4000L",
-      path: "assets/pictures/images/hor_tank.png",
-      url:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000L.glb?raw=true",
+      path: "assets/images/tank_1000.png",
+      url: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000L.glb",
       androidUrl:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_4000L.glb?raw=true",
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_4000L.glb",
     ),
     ArObjectModel(
       name: "7000L",
-      path: "assets/pictures/images/hor_tank.png",
-      url:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_7000L.glb?raw=true",
-      androidUrl:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_7000L.glb?raw=true",
+      path: "assets/images/tank_7000.png",
+      url: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_7000L.glb",
+      androidUrl: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_7000L.glb",
     ),
   ];
+  initState() {
+    getLocalFilePath();
+    super.initState();
+  }
+
   int selectedImage = 1;
   double _counter = 0;
   double _previousScale = 1.0;
   double _scaleFactor = 1.0;
-
+  NodeType currentNodeType = NodeType.webGLB;
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context).copyWith(
+      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      useMaterial3: true,
+    );
     return Scaffold(
         appBar: AppBar(
           title: const Text('Screenshots'),
         ),
         body: Container(
             child: Stack(children: [
-          GestureDetector(
-            // onScaleStart: (ScaleStartDetails details) {
-            //   _previousScale = _scaleFactor;
-            // },
-            // onScaleUpdate: (ScaleUpdateDetails details) {
-            //   if (details.scale != 1.0) {
-            //     if (details.scale > _previousScale && _counter < 100) {
-            //       _counter += 1; // Increase counter by 10%
-            //       nodes.last.transform = Matrix4.identity()
-            //         ..scale(nodes.last.scale * (_counter / 100));
-            //     } else if (details.scale < _previousScale && _counter > 0) {
-            //       _counter -= 1; // Decrease counter by 10%
-            //       nodes.last.transform = Matrix4.identity()
-            //         ..scale(nodes.last.scale * (_counter / 100));
-            //     }
-            //     _previousScale = details.scale;
-            //     setState(() {});
-            //   }
-            // },
-            child: ARView(
-              onARViewCreated: onARViewCreated,
-              planeDetectionConfig: PlaneDetectionConfig.horizontal,
-              // showPlatformType: true,
-            ),
+          // GestureDetector(
+          // onScaleStart: (ScaleStartDetails details) {
+          //   _previousScale = _scaleFactor;
+          // },
+          // onScaleUpdate: (ScaleUpdateDetails details) {
+          //   if (details.scale != 1.0) {
+          //     if (details.scale > _previousScale && _counter < 100) {
+          //       _counter += 1; // Increase counter by 10%
+          //       nodes.last.transform = Matrix4.identity()
+          //         ..scale(nodes.last.scale * (_counter / 100));
+          //     } else if (details.scale < _previousScale && _counter > 0) {
+          //       _counter -= 1; // Decrease counter by 10%
+          //       nodes.last.transform = Matrix4.identity()
+          //         ..scale(nodes.last.scale * (_counter / 100));
+          //     }
+          //     _previousScale = details.scale;
+          //     setState(() {});
+          //   }
+          // },
+          // child:
+          ARView(
+            onARViewCreated: onARViewCreated,
+            planeDetectionConfig: PlaneDetectionConfig.horizontal,
+            // showPlatformType: true,
           ),
+          FutureBuilder<bool>(
+            future: isFileExists(arObjects[selectedImage].url),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Text(
+                  "${snapshot.data}",
+                  style: const TextStyle(fontSize: 40, color: Colors.blue),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+          // ),
           // Align(
           //   alignment: Alignment.center,
           //   child: Text(
@@ -143,9 +205,35 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                   children: arObjects
                       .map((e) => Expanded(
                             child: InkWell(
-                              onTap: () {
-                                onRemoveEverything();
-                                selectedImage = arObjects.indexOf(e);
+                              onTap: () async {
+                                await onRemoveEverything();
+                                debugPrint("path: 1 ${e.toJson()}}");
+                                if (!e.isLocal) {
+                                  final path = await showFutureProgressDialog<String?>(
+                                      context: context,
+                                      initFuture: () async => await downloadArModel(
+                                          Platform.isAndroid ? e.androidUrl : e.url));
+
+                                  if (path != null) {
+                                    e.isLocal = true;
+                                    e = ArObjectModel(
+                                      name: e.name,
+                                      path: e.path,
+                                      url: path,
+                                      androidUrl: path,
+                                      isLocal: true,
+                                    );
+                                    debugPrint("path:------    $path");
+                                    debugPrint("path: ==========   ${e.toJson()}}");
+                                    saveArObjects(e);
+                                  }
+                                }
+
+                                // selectedImage = arObjects.indexOf(e);
+                                selectedImage =
+                                    arObjects.indexWhere((element) => element.name == e.name);
+                                arObjects[selectedImage] = e;
+                                debugPrint("path: 2 ${e.toJson()}}");
                                 setState(() {});
                               },
                               child: Container(
@@ -182,6 +270,10 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                             ),
                           ))
                       .toList(),
+                ),
+                Text(
+                  "${arObjects[selectedImage].name}\n ${arObjects[selectedImage].url.split('/').last} \n ${arObjects[selectedImage].isLocal} \n ${arObjects[selectedImage].isLocal == false ? NodeType.webGLB : NodeType.fileSystemAppFolderGLB}",
+                  style: const TextStyle(fontSize: 12, color: Colors.red),
                 ),
                 Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                   Expanded(
@@ -291,7 +383,9 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
         anchors.add(newAnchor);
         // Add note to anchor
         var newNode = ARNode(
-            type: NodeType.webGLB,
+            type: arObjects[selectedImage].isLocal == false
+                ? NodeType.webGLB
+                : NodeType.fileSystemAppFolderGLB,
             // uri:
             // "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
             // scale: Vector3(0.2, 0.2, 0.2),
@@ -318,8 +412,9 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
             // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_1000.glb?raw=true",
             // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_2000.glb?raw=true",
             // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_4000.glb?raw=true",
-            uri:
-                Platform.isIOS ? arObjects[selectedImage].url : arObjects[selectedImage].androidUrl,
+            uri: Platform.isIOS
+                ? '${arObjects[selectedImage].url.split('/').last}${'?raw=true'}'
+                : '${arObjects[selectedImage].url}${'?raw=true'}',
             scale: Platform.isIOS ? Vector3(50, 50, 50) : Vector3(1, 1, 1),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
@@ -373,5 +468,51 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
     * (e.g. if you intend to share the nodes through the cloud)
     */
     //rotatedNode.transform = newTransform;
+  }
+
+  void getLocalFilePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    for (var arObject in arObjects) {
+      final arObjectJson = prefs.getString(arObject.name);
+      if (arObjectJson != null) {
+        final arObjectModel = ArObjectModel.fromJson(jsonDecode(arObjectJson));
+        final index = arObjects.indexWhere((element) => element.name == arObjectModel.name);
+        if (index != -1) {
+          arObjects[index] = arObjectModel;
+        }
+        debugPrint("getLocalFilePath arObjectJson: $arObjectJson");
+        debugPrint("===========================================");
+      }
+    }
+  }
+
+  Future<String?> downloadArModel(String currentARObjectURL) async {
+    try {
+      var path = await DownloadHelper.downloadFile(currentARObjectURL);
+      return path;
+    } catch (e) {
+      debugPrint("Error: $e");
+      return null;
+    }
+  }
+
+  // create method to save ar objects to shared preferences
+  void saveArObjects(ArObjectModel arObject) async {
+    arObject = arObject.copyWith(isLocal: true);
+    var arObjectsJson = jsonEncode(arObject.toJson());
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(arObject.name, arObjectsJson);
+  }
+
+  Future<bool> isFileExists(String url) async {
+    File file = File(url);
+
+    bool fileExists = await file.exists();
+
+    if (fileExists) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

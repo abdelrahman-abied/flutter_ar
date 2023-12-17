@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ar/ar_flutter/ar_ios.dart';
 import 'package:flutter_ar/screen_shot.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Permission.camera.request();
+  await Permission.storage.request();
   runApp(const MyApp());
 }
 
@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: Zoom(),
       home: ScreenshotWidget(),
+      // home: LocalAndWebObjectsWidget(),
     );
   }
 }
