@@ -56,6 +56,7 @@ dependencies:
   dio: ^5.4.0
   flutter_archive: ^5.0.0
   model_viewer_plus: ^1.7.0
+  logger: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:

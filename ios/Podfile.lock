@@ -53,6 +53,9 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - "GoogleUtilities/NSData+zlib (~> 7.7)"
   - Flutter (1.0.0)
+  - flutter_archive (0.0.1):
+    - Flutter
+    - ZIPFoundation (= 0.9.13)
   - geolocator_apple (1.2.0):
     - Flutter
   - GLTFSceneKit (0.3.0)
@@ -93,15 +96,23 @@ PODS:
     - BlueRSA (~> 1.0)
     - KituraContracts (~> 1.2)
     - LoggerAPI (~> 1.7)
+  - url_launcher_ios (0.0.1):
+    - Flutter
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
+  - ZIPFoundation (0.9.13)
 
 DEPENDENCIES:
   - ar_flutter_plugin (from `.symlinks/plugins/ar_flutter_plugin/ios`)
   - arkit_plugin (from `.symlinks/plugins/arkit_plugin/ios`)
   - Flutter (from `Flutter`)
+  - flutter_archive (from `.symlinks/plugins/flutter_archive/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs:
@@ -126,6 +137,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - SwiftJWT
+    - ZIPFoundation
 
 EXTERNAL SOURCES:
   ar_flutter_plugin:
@@ -134,6 +146,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/arkit_plugin/ios"
   Flutter:
     :path: Flutter
+  flutter_archive:
+    :path: ".symlinks/plugins/flutter_archive/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   path_provider_foundation:
@@ -142,6 +156,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
   ar_flutter_plugin: aef768ea5b1f3b79a21b1408ee04e384533d92cb
@@ -158,6 +176,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 0a115432c4e223c5ab20b0dbbe4cbefa793a0e8e
   FirebaseRemoteConfig: ee09d77a7d7c7e31da6a0d1cf956cd611c85609c
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_archive: 1805fdd3a695fd284b43edb53dc35ca843fb761c
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
   GLTFSceneKit: d1b437c514ba2aed5555afb0fddd64e030612d57
   GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
@@ -172,6 +191,9 @@ SPEC CHECKSUMS:
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   SwiftJWT: 88c412708f58c169d431d344c87bc79a87c830ae
+  url_launcher_ios: bf5ce03e0e2088bad9cc378ea97fa0ed5b49673b
+  webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
+  ZIPFoundation: ae5b4b813d216d3bf0a148773267fff14bd51d37
 
 PODFILE CHECKSUM: 9bb2320e42690415e8e09e2b6a4a0eeaf53087c8
 

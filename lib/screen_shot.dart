@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
@@ -15,7 +16,7 @@ import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ar/download_helper.dart';
-import 'package:flutter_ar/progress/future_dialog.dart';
+import 'package:flutter_ar/log.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 
@@ -95,36 +96,58 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
     ArObjectModel(
       name: "450l",
       path: "assets/images/tank_450.png",
-      url: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450L.glb",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450L.glb?raw=true§",
       androidUrl:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_450L.glb",
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_450L.glb?raw=true§",
     ),
     ArObjectModel(
       name: "1000L",
-      path: "assets/images/tank_1000.png",
-      url: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000L.glb",
+      path: "assets/images/tank_4000.png",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000L.glb?raw=true",
       androidUrl:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_1000L.glb",
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_1000L.glb?raw=true",
     ),
     ArObjectModel(
       name: "2000L",
       path: "assets/images/tank_1000.png",
-      url: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_2000L.glb",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_2000L.glb?raw=true",
       androidUrl:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_2000L.glb",
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_2000L.glb?raw=true",
     ),
     ArObjectModel(
       name: "4000L",
       path: "assets/images/tank_1000.png",
-      url: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000L.glb",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000L.glb?raw=true",
       androidUrl:
-          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_4000L.glb",
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_4000L.glb?raw=true",
     ),
     ArObjectModel(
       name: "7000L",
       path: "assets/images/tank_7000.png",
-      url: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_7000L.glb",
-      androidUrl: "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_7000L.glb",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_7000L.glb?raw=true",
+      androidUrl:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_7000L.glb?raw=true",
+    ),
+    ArObjectModel(
+      name: "1000L VUG",
+      path: "assets/images/tank_1000L_VUG.png",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000L_VUG.glb?raw=true",
+      androidUrl:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_1000L_VUG.glb?raw=true",
+    ),
+    ArObjectModel(
+      name: "1750L HUG",
+      path: "assets/images/tank_1750L_HUG.png",
+      url:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1750L_HUG.glb?raw=true",
+      androidUrl:
+          "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/android_tank_1750L_HUG.glb?raw=true",
     ),
   ];
   initState() {
@@ -132,6 +155,7 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
     super.initState();
   }
 
+  late final newScale;
   int selectedImage = 1;
   double _counter = 0;
   double _previousScale = 1.0;
@@ -208,30 +232,29 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                               onTap: () async {
                                 await onRemoveEverything();
                                 debugPrint("path: 1 ${e.toJson()}}");
-                                if (!e.isLocal) {
-                                  final path = await showFutureProgressDialog<String?>(
-                                      context: context,
-                                      initFuture: () async => await downloadArModel(
-                                          Platform.isAndroid ? e.androidUrl : e.url));
+                                // if (!e.isLocal) {
+                                //   final path = await showFutureProgressDialog<String?>(
+                                //       context: context,
+                                //       initFuture: () async => await downloadArModel(
+                                //           Platform.isAndroid ? e.androidUrl : e.url));
 
-                                  if (path != null) {
-                                    e.isLocal = true;
-                                    e = ArObjectModel(
-                                      name: e.name,
-                                      path: e.path,
-                                      url: path,
-                                      androidUrl: path,
-                                      isLocal: true,
-                                    );
-                                    debugPrint("path:------    $path");
-                                    debugPrint("path: ==========   ${e.toJson()}}");
-                                    saveArObjects(e);
-                                  }
-                                }
+                                //   if (path != null) {
+                                //     e.isLocal = true;
+                                //     e = ArObjectModel(
+                                //       name: e.name,
+                                //       path: e.path,
+                                //       url: path,
+                                //       androidUrl: path,
+                                //       isLocal: true,
+                                //     );
+                                //     debugPrint("path:------    $path");
+                                //     debugPrint("path: ==========   ${e.toJson()}}");
+                                //     saveArObjects(e);
+                                //   }
+                                // }
 
-                                // selectedImage = arObjects.indexOf(e);
-                                selectedImage =
-                                    arObjects.indexWhere((element) => element.name == e.name);
+                                // selectedImage =
+                                //     arObjects.indexWhere((element) => element.name == e.name);
                                 arObjects[selectedImage] = e;
                                 debugPrint("path: 2 ${e.toJson()}}");
                                 setState(() {});
@@ -275,40 +298,77 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                   "${arObjects[selectedImage].name}\n ${arObjects[selectedImage].url.split('/').last} \n ${arObjects[selectedImage].isLocal} \n ${arObjects[selectedImage].isLocal == false ? NodeType.webGLB : NodeType.fileSystemAppFolderGLB}",
                   style: const TextStyle(fontSize: 12, color: Colors.red),
                 ),
-                Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                  Expanded(
-                      child: ElevatedButton(
-                          onPressed: onRemoveEverything, child: const Text("Remove Everything"))),
-                  Expanded(
-                      child: ElevatedButton(
-                          onPressed: onTakeScreenshot, child: const Text("Take Screenshot"))),
-                  Expanded(
-                    child: IconButton(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                        child: ElevatedButton(
+                            onPressed: onRemoveEverything, child: const Text("Remove Everything"))),
+                    Expanded(
+                        child: ElevatedButton(
+                            onPressed: onTakeScreenshot, child: const Text("Take Screenshot"))),
+                    Expanded(
+                      child: IconButton(
+                          color: Colors.white,
+                          onPressed: () {
+                            debugPrint("scale: ${nodes.first.scale}");
+                            debugPrint("scale: ${nodes.length}");
+                            // increase scale to 10% of the current scale
+                            // nodes.last.transform = Matrix4.identity()
+                            //   ..scale(nodes.last.scale * 1.1);
+
+                            nodes.first.transform = Matrix4.identity()
+                              ..scale(nodes.last.scale * 1.1);
+                            Log.w("data: Scale ${nodes.last.scale}");
+                            Log.w("data: Rotation ${nodes.last.rotation}");
+                          },
+                          icon: const Icon(Icons.zoom_out_map)),
+                    ),
+                    Expanded(
+                      child: IconButton(
+                          color: Colors.white,
+                          onPressed: () {
+                            // decrease scale to 10% of the current scale
+
+                            nodes.first.transform = Matrix4.identity()
+                              ..scale(nodes.last.scale * .9);
+                            Log.w("data: Scale ${nodes.last.scale}");
+                            Log.w("data: Rotation ${nodes.last.rotation}");
+                          },
+                          icon: const Icon(Icons.zoom_in_map)),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        // rotateY 90  degree
+                        rotate();
+                        nodes.first.transform = Matrix4.identity()
+                          ..scale(nodes.last.scale)
+                          ..rotateY(rotationAngle);
+                        Log.w("data: Scale ${nodes.last.scale}");
+                        Log.w("data: Rotation ${nodes.last.rotation}");
+                      },
+                      icon: const Icon(
+                        Icons.rotate_90_degrees_cw,
                         color: Colors.white,
-                        onPressed: () {
-                          debugPrint("scale: ${nodes.first.scale}");
-                          debugPrint("scale: ${nodes.length}");
-                          // increase scale to 10% of the current scale
-                          nodes.last.transform = Matrix4.identity()..scale(nodes.last.scale * 1.1);
-                        },
-                        icon: const Icon(Icons.zoom_out_map)),
-                  ),
-                  Expanded(
-                    child: IconButton(
-                        color: Colors.white,
-                        onPressed: () {
-                          debugPrint("scale: ${nodes.first.scale}");
-                          debugPrint("scale: ${nodes.length}");
-                          // decrease scale to 10% of the current scale
-                          nodes.first.transform = Matrix4.identity()..scale(nodes.last.scale * .9);
-                        },
-                        icon: const Icon(Icons.zoom_in_map)),
-                  )
-                ]),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           )
         ])));
+  }
+
+  double rotationAngle = 0.0;
+
+  void rotate() {
+    setState(() {
+      rotationAngle += pi / 2; // Rotate by 90 degrees
+      // if (rotationAngle >= 2 * pi) {
+      //   rotationAngle = 0.0; // Reset to 0 degrees after full rotation
+      // }
+    });
   }
 
   void onARViewCreated(ARSessionManager arSessionManager, ARObjectManager arObjectManager,
@@ -386,35 +446,12 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
             type: arObjects[selectedImage].isLocal == false
                 ? NodeType.webGLB
                 : NodeType.fileSystemAppFolderGLB,
-            // uri:
-            // "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-            // scale: Vector3(0.2, 0.2, 0.2),
-            //  real worked worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/simple_propane_tank.glb?raw=true",
-            // worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_shell_1000l.glb?raw=true",
-            // real worked worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l.glb?raw=true",
-            // not worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l.glb?raw=true",
-            // not worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_4000l_1.glb?raw=true",
-            // not worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_450_L.glb?raw=true",
-            // real worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000l_Husam.glb?raw=true",
-            // real worked worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/abdelrahman.glb?raw=true",
-            // real worked worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/tank_1000lb.glb?raw=true",
-
-            /// worked
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_1000.glb?raw=true",
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_2000.glb?raw=true",
-            // "https://github.com/abdelrahman-abied/flutter_ar/blob/main/assets/Tank_4000.glb?raw=true",
-            uri: Platform.isIOS
-                ? '${arObjects[selectedImage].url.split('/').last}${'?raw=true'}'
-                : '${arObjects[selectedImage].url}${'?raw=true'}',
+            // Download urls
+            // uri: Platform.isIOS
+            //     ? '${arObjects[selectedImage].url.split('/').last}${'?raw=true'}'
+            //     : '${arObjects[selectedImage].url}${'?raw=true'}',
+            uri:
+                Platform.isIOS ? arObjects[selectedImage].url : arObjects[selectedImage].androidUrl,
             scale: Platform.isIOS ? Vector3(50, 50, 50) : Vector3(1, 1, 1),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
