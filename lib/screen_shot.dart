@@ -85,7 +85,8 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
 
   List<ARNode> nodes = [];
   List<ARAnchor> anchors = [];
-
+  ARNode? node;
+  Vector3? lastPosition;
   @override
   void dispose() {
     super.dispose();
@@ -311,16 +312,18 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                       child: IconButton(
                           color: Colors.white,
                           onPressed: () {
-                            debugPrint("scale: ${nodes.first.scale}");
-                            debugPrint("scale: ${nodes.length}");
+                            // debugPrint("position before scale: ==>  ${nodes.first.scale}");
+                            debugPrint("position before position: ==> ${node?.position}");
                             // increase scale to 10% of the current scale
                             // nodes.last.transform = Matrix4.identity()
-                            //   ..scale(nodes.last.scale * 1.1);
+                            //   ..scale(    node?.scale * 1.1);
+                            if (lastPosition != null) node?.position = lastPosition!;
 
-                            nodes.first.transform = Matrix4.identity()
-                              ..scale(nodes.last.scale * 1.1);
-                            Log.w("data: Scale ${nodes.last.scale}");
-                            Log.w("data: Rotation ${nodes.last.rotation}");
+                            node?.transform = Matrix4.identity()
+                              ..scale(node!.scale * 1.1)
+                              ..rotateY(rotationAngle);
+                            Log.w("position after position: ==>${node?.scale}");
+                            Log.w("data: Rotation ${node?.rotation}");
                           },
                           icon: const Icon(Icons.zoom_out_map)),
                     ),
@@ -329,23 +332,30 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                           color: Colors.white,
                           onPressed: () {
                             // decrease scale to 10% of the current scale
+                            debugPrint("position before position: ==> ${node?.position}");
+                            if (lastPosition != null) node?.position = lastPosition!;
+                            node?.transform = Matrix4.identity()
+                              ..scale(node!.scale * .9)
+                              ..rotateY(rotationAngle);
 
-                            nodes.first.transform = Matrix4.identity()
-                              ..scale(nodes.last.scale * .9);
-                            Log.w("data: Scale ${nodes.last.scale}");
-                            Log.w("data: Rotation ${nodes.last.rotation}");
+                            debugPrint("position after position: ==> ${node?.position}");
+                            Log.w("data: Scale ${node?.scale}");
+                            Log.w("data: Rotation ${node?.rotation}");
                           },
                           icon: const Icon(Icons.zoom_in_map)),
                     ),
                     IconButton(
                       onPressed: () {
                         // rotateY 90  degree
+                        debugPrint("position before position: ==> ${node?.position}");
                         rotate();
-                        nodes.first.transform = Matrix4.identity()
-                          ..scale(nodes.last.scale)
+                        node?.transform = Matrix4.identity()
+                          ..scale(node?.scale)
                           ..rotateY(rotationAngle);
-                        Log.w("data: Scale ${nodes.last.scale}");
-                        Log.w("data: Rotation ${nodes.last.rotation}");
+                        debugPrint("position after position: ==> ${node?.position}");
+
+                        Log.w("data: Scale ${node?.scale}");
+                        Log.w("data: Rotation ${node?.rotation}");
                       },
                       icon: const Icon(
                         Icons.rotate_90_degrees_cw,
@@ -460,6 +470,7 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
 
         if (didAddNodeToAnchor != null && didAddNodeToAnchor) {
           nodes.add(newNode);
+          node = newNode;
         } else {
           arSessionManager!.onError("Adding Node to Anchor failed");
         }
@@ -479,13 +490,20 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
 
   onPanEnded(String nodeName, Matrix4 newTransform) {
     print("Ended panning node " + nodeName);
-    // final pannedNode = nodes.firstWhere((element) => element.name == nodeName);
+    final pannedNode = nodes.firstWhere((element) => element.name == nodeName);
 
     /*
     * Uncomment the following command if you want to keep the transformations of the Flutter representations of the nodes up to date
     * (e.g. if you intend to share the nodes through the cloud)
     */
-    //pannedNode.transform = newTransform;
+    if (node != null) {
+      debugPrint("position moving null position: ==> ${node?.position}");
+      lastPosition = node?.position;
+    }
+
+    pannedNode.transform = newTransform;
+    debugPrint("position moving position: ==> ${node?.position}");
+    debugPrint("position moving lastPosition: ==> ${lastPosition}");
   }
 
   onRotationStarted(String nodeName) {
