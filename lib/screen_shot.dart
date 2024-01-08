@@ -296,53 +296,69 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
                       .toList(),
                 ),
                 Text(
-                  "${arObjects[selectedImage].name}\n ${arObjects[selectedImage].url.split('/').last} \n ${arObjects[selectedImage].isLocal} \n ${arObjects[selectedImage].isLocal == false ? NodeType.webGLB : NodeType.fileSystemAppFolderGLB}",
-                  style: const TextStyle(fontSize: 12, color: Colors.red),
+                  """${arObjects[selectedImage].name} \n
+                   ${arObjects[selectedImage].url.split('/').last} \n
+                    ${arObjects[selectedImage].isLocal} \n 
+                  ${arObjects[selectedImage].isLocal == false ? NodeType.webGLB : NodeType.fileSystemAppFolderGLB}""",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.red,
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
-                        child: ElevatedButton(
-                            onPressed: onRemoveEverything, child: const Text("Remove Everything"))),
+                      child: ElevatedButton(
+                        onPressed: onRemoveEverything,
+                        child: const Text("Remove "),
+                      ),
+                    ),
                     Expanded(
-                        child: ElevatedButton(
-                            onPressed: onTakeScreenshot, child: const Text("Take Screenshot"))),
-                    Expanded(
-                      child: IconButton(
-                          color: Colors.white,
-                          onPressed: () {
-                            // debugPrint("position before scale: ==>  ${nodes.first.scale}");
-                            debugPrint("position before position: ==> ${node?.position}");
-                            // increase scale to 10% of the current scale
-                            // nodes.last.transform = Matrix4.identity()
-                            //   ..scale(    node?.scale * 1.1);
-                            if (lastPosition != null) node?.position = lastPosition!;
-
-                            node?.transform = Matrix4.identity()
-                              ..scale(node!.scale * 1.1)
-                              ..rotateY(rotationAngle);
-                            Log.w("position after position: ==>${node?.scale}");
-                            Log.w("data: Rotation ${node?.rotation}");
-                          },
-                          icon: const Icon(Icons.zoom_out_map)),
+                      child: ElevatedButton(
+                        onPressed: onTakeScreenshot,
+                        child: const Text("Take Screenshot"),
+                      ),
                     ),
                     Expanded(
                       child: IconButton(
-                          color: Colors.white,
-                          onPressed: () {
-                            // decrease scale to 10% of the current scale
-                            debugPrint("position before position: ==> ${node?.position}");
-                            if (lastPosition != null) node?.position = lastPosition!;
-                            node?.transform = Matrix4.identity()
-                              ..scale(node!.scale * .9)
-                              ..rotateY(rotationAngle);
+                        color: Colors.white,
+                        onPressed: () {
+                          // debugPrint("position before scale: ==>  ${nodes.first.scale}");
+                          debugPrint("position before position: ==> ${node?.position}");
+                          // increase scale to 10% of the current scale
+                          // nodes.last.transform = Matrix4.identity()
+                          //   ..scale(    node?.scale * 1.1);
+                          if (lastPosition != null) node?.position = lastPosition!;
 
-                            debugPrint("position after position: ==> ${node?.position}");
-                            Log.w("data: Scale ${node?.scale}");
-                            Log.w("data: Rotation ${node?.rotation}");
-                          },
-                          icon: const Icon(Icons.zoom_in_map)),
+                          node?.transform = Matrix4.identity()
+                            ..scale(node!.scale * 1.1)
+                            ..rotateY(rotationAngle);
+                          Log.w("position after position: ==>${node?.scale}");
+                          Log.w("data: Rotation ${node?.rotation}");
+                        },
+                        icon: const Icon(Icons.zoom_out_map),
+                      ),
+                    ),
+                    Expanded(
+                      child: IconButton(
+                        color: Colors.white,
+                        onPressed: () {
+                          // decrease scale to 10% of the current scale
+                          debugPrint("position before position: ==> ${node?.position}");
+                          if (lastPosition != null) node?.position = lastPosition!;
+                          node?.transform = Matrix4.identity()
+                            ..scale(node!.scale * .9)
+                            ..rotateY(rotationAngle);
+
+                          debugPrint("position after position: ==> ${node?.position}");
+                          Log.w("data: Scale ${node?.scale}");
+                          Log.w("data: Rotation ${node?.rotation}");
+                        },
+                        icon: const Icon(
+                          Icons.zoom_in_map,
+                        ),
+                      ),
                     ),
                     IconButton(
                       onPressed: () {
